@@ -3,7 +3,7 @@ package kalk_v1;
 import java.util.Scanner;
 
 public class Kalkulator {
-
+// Testthgf
 	public static void main(String[] args) {
 		System.out.println("Podaj pierwsza cyfre");
 		
