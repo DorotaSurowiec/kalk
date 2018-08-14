@@ -3,7 +3,7 @@ package kalk_v1;
 import java.util.Scanner;
 
 public class Kalkulator {
-// Testthgf
+
 	public static void main(String[] args) {
 		System.out.println("Podaj pierwsza cyfre");
 		
@@ -19,7 +19,7 @@ public class Kalkulator {
 		System.out.print("Wybierz co chcesz zrobic\n1.dodawanie\n2.odejmowanie\n");
 		
 		w = odczyt.nextInt();
-		
+		//jhgjhghjghjgjhghjgjhg
 		switch(w) {
 		case 1:
 			System.out.println(dodaj(a, b));
