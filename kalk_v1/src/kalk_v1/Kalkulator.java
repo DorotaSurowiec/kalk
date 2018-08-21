@@ -1,10 +1,17 @@
 package kalk_v1;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Kalkulator {
-
-	public static void main(String[] args) {
+	
+	public void start() {
+		List<KalkulatorStrategy> strategie = new ArrayList<>();
+		strategie.add(new DodawanieStrategy());
+		strategie.add(new OdejmowanieStrategy());
+		strategie.add(new Mno¿enieStrategy());
+		
 		System.out.println("Podaj pierwsza cyfre");
 		
 		int a, b, w;
@@ -16,28 +23,15 @@ public class Kalkulator {
 		
 		b = odczyt.nextInt();
 		
-		System.out.print("Wybierz co chcesz zrobic\n1.dodawanie\n2.odejmowanie\n");
+		System.out.print("Wybierz co chcesz zrobic\n1.dodawanie\n2.odejmowanie\n3.mno¿enie\n");
 		
 		w = odczyt.nextInt();
-		//jhgjhghjghjgjhghjgjhg
-		switch(w) {
-		case 1:
-			System.out.println(dodaj(a, b));
-			break;
-		case 2:
-			System.out.println(odejmij(a, b));
-			break;
-		default:
-			System.out.println("Nieprawidlowy wybor");
+		OperacjaType wybranaOpcja = OperacjaType.fromIntValue(w);
+		System.out.println("Wybrano: " + wybranaOpcja);
+		for (KalkulatorStrategy strategia : strategie) {
+			if (strategia.czyPasuje(wybranaOpcja)) {
+				System.out.println(strategia.wynik(a, b));;
+			}
 		}
-
-	}
-	
-	public static int dodaj (int a, int b) {
-		return a + b;
-	}
-	
-	public static int odejmij (int a, int b) {
-		return a - b;
 	}
 }
