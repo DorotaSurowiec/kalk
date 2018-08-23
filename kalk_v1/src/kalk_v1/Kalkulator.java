@@ -12,26 +12,51 @@ public class Kalkulator {
 		strategie.add(new OdejmowanieStrategy());
 		strategie.add(new Mno¿enieStrategy());
 		
-		System.out.println("Podaj pierwsza cyfre");
+		System.out.println("Podaj ilosc liczb");
 		
-		int a, b, w;
+		int ilosc, a, b, w;
+		int[] tab;
+		
 		Scanner odczyt = new Scanner(System.in);
+		ilosc = odczyt.nextInt();
 		
-		a = odczyt.nextInt();
-		
-		System.out.println("Podaj druga cyfre");
-		
-		b = odczyt.nextInt();
-		
-		System.out.print("Wybierz co chcesz zrobic\n1.dodawanie\n2.odejmowanie\n3.mno¿enie\n");
-		
-		w = odczyt.nextInt();
-		OperacjaType wybranaOpcja = OperacjaType.fromIntValue(w);
-		System.out.println("Wybrano: " + wybranaOpcja);
-		for (KalkulatorStrategy strategia : strategie) {
-			if (strategia.czyPasuje(wybranaOpcja)) {
-				System.out.println(strategia.wynik(a, b));;
+		if (ilosc == 2) {
+			System.out.println("Podaj pierwsza liczbe");
+			a = odczyt.nextInt();
+			
+			System.out.println("Podaj druga liczbe");
+			b = odczyt.nextInt();
+			
+			System.out.print("Wybierz co chcesz zrobic\n1.dodawanie\n2.odejmowanie\n3.mno¿enie\n");
+			w = odczyt.nextInt();
+			
+			OperacjaType wybranaOpcja = OperacjaType.fromIntValue(w);
+			System.out.println("Wybrano: " + wybranaOpcja);
+			for (KalkulatorStrategy strategia : strategie) {
+				if (strategia.czyPasuje(wybranaOpcja)) {
+					System.out.println(strategia.wynik(a, b));;
+				}
 			}
 		}
-	}
+		else if (ilosc > 2) {
+			tab = new int[ilosc];
+			System.out.println("Podaj liczby");
+			for (int i=0; i<ilosc; i++)
+				tab[i]=odczyt.nextInt();
+			
+			System.out.print("Wybierz co chcesz zrobic\n1.dodawanie\n2.odejmowanie\n3.mno¿enie\n");
+			w = odczyt.nextInt();
+			
+			OperacjaType wybranaOpcja = OperacjaType.fromIntValue(w);
+			System.out.println("Wybrano: " + wybranaOpcja);
+			for (KalkulatorStrategy strategia : strategie) {
+				if (strategia.czyPasuje(wybranaOpcja)) {
+					System.out.println(strategia.wynik(tab));;
+				}
+			}
+		}
+		else {
+			System.out.println("Nie mozna wykonac zadnej operacji");
+		}
+	}		
 }
