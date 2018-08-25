@@ -11,6 +11,7 @@ public class Kalkulator {
 		strategie.add(new DodawanieStrategy());
 		strategie.add(new OdejmowanieStrategy());
 		strategie.add(new Mno¿enieStrategy());
+		strategie.add(new PotegowanieStrategy());
 		
 		System.out.println("Podaj ilosc liczb");
 		
@@ -27,7 +28,7 @@ public class Kalkulator {
 			System.out.println("Podaj druga liczbe");
 			b = odczyt.nextInt();
 			
-			System.out.print("Wybierz co chcesz zrobic\n1.dodawanie\n2.odejmowanie\n3.mno¿enie\n");
+			System.out.print("Wybierz co chcesz zrobic\n1.dodawanie\n2.odejmowanie\n3.mnozenie\n4.potegowanie\n");
 			w = odczyt.nextInt();
 			
 			OperacjaType wybranaOpcja = OperacjaType.fromIntValue(w);
@@ -44,14 +45,18 @@ public class Kalkulator {
 			for (int i=0; i<ilosc; i++)
 				tab[i]=odczyt.nextInt();
 			
-			System.out.print("Wybierz co chcesz zrobic\n1.dodawanie\n2.odejmowanie\n3.mno¿enie\n");
+			System.out.print("Wybierz co chcesz zrobic\n1.dodawanie\n2.odejmowanie\n3.mnozenie\n4.potegowanie\n");
 			w = odczyt.nextInt();
 			
 			OperacjaType wybranaOpcja = OperacjaType.fromIntValue(w);
 			System.out.println("Wybrano: " + wybranaOpcja);
 			for (KalkulatorStrategy strategia : strategie) {
 				if (strategia.czyPasuje(wybranaOpcja)) {
-					System.out.println(strategia.wynik(tab));;
+					try { 
+						System.out.println(strategia.wynik(tab));
+					} catch (UnsupportedOperationException e) {
+						System.out.println("Nieprawidlowa ilosc liczb, sprobuj z dwoma");
+					}
 				}
 			}
 		}

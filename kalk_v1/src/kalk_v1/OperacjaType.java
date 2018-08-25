@@ -3,7 +3,8 @@ package kalk_v1;
 public enum OperacjaType {
 	DODAWANIE(1), 
 	ODEJMOWANIE(2),
-	MNO¯ENIE(3);
+	MNO¯ENIE(3),
+	POTEGOWANIE(4);
 	
 	int opcja;
 
