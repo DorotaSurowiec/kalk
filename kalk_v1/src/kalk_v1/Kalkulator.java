@@ -1,12 +1,14 @@
 package kalk_v1;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Kalkulator {
 	
-	public void start() {
+	public void start() throws FileNotFoundException {
 		List<KalkulatorStrategy> strategie = new ArrayList<>();
 		strategie.add(new DodawanieStrategy());
 		strategie.add(new OdejmowanieStrategy());
@@ -15,7 +17,8 @@ public class Kalkulator {
 		
 		System.out.println("Podaj ilosc liczb");
 		
-		int ilosc, a, b, w;
+		int ilosc, a, b, w, wynik = 0;
+		String z;
 		int[] tab;
 		
 		Scanner odczyt = new Scanner(System.in);
@@ -35,7 +38,8 @@ public class Kalkulator {
 			System.out.println("Wybrano: " + wybranaOpcja);
 			for (KalkulatorStrategy strategia : strategie) {
 				if (strategia.czyPasuje(wybranaOpcja)) {
-					System.out.println(strategia.wynik(a, b));;
+					wynik = strategia.wynik(a, b);
+					System.out.println(wynik);;
 				}
 			}
 		}
@@ -52,8 +56,9 @@ public class Kalkulator {
 			System.out.println("Wybrano: " + wybranaOpcja);
 			for (KalkulatorStrategy strategia : strategie) {
 				if (strategia.czyPasuje(wybranaOpcja)) {
-					try { 
-						System.out.println(strategia.wynik(tab));
+					try {
+						wynik = strategia.wynik(tab);
+						System.out.println(wynik);
 					} catch (UnsupportedOperationException e) {
 						System.out.println("Nieprawidlowa ilosc liczb, sprobuj z dwoma");
 					}
@@ -62,6 +67,17 @@ public class Kalkulator {
 		}
 		else {
 			System.out.println("Nie mozna wykonac zadnej operacji");
+		}
+		
+		System.out.println("Czy chcesz zapisac wynik do pliku? tak/nie");
+		Scanner odczyt2 = new Scanner(System.in);
+		z = odczyt2.nextLine();
+		
+		PrintWriter zapis = new PrintWriter ("ZapisanyWynik.txt");
+		
+		if (z == "tak") {
+			zapis.print(wynik);
+			zapis.close();
 		}
 	}		
 }
