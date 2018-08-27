@@ -6,78 +6,103 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.naming.OperationNotSupportedException;
+
 public class Kalkulator {
 	
+	List<KalkulatorStrategy> strategie;
+	
 	public void start() throws FileNotFoundException {
-		List<KalkulatorStrategy> strategie = new ArrayList<>();
+		initStrategies();
+		
+		System.out.println("Podaj ilosc liczb");
+		
+		Scanner odczyt = new Scanner(System.in);
+		int iloscLiczb = odczyt.nextInt();
+		
+		if (iloscLiczb < 2) {
+			System.out.println("Nie mozna wykonac zadnej operacji");
+			odczyt.close();
+			return;
+		}
+		
+		try {
+			int calculationResult;
+			if (iloscLiczb == 2) {
+				calculationResult = calculateForTwoNumbers(odczyt);
+			} else  {
+				calculationResult = calculateForArrayNumbers(iloscLiczb, odczyt);
+			}
+			System.out.println("Czy chcesz zapisac wynik do pliku? tak/nie");
+			boolean czyZapisac = odczyt.nextLine().equals("tak");
+			
+			if (czyZapisac) {
+				PrintWriter zapis = new PrintWriter ("ZapisanyWynik.txt");
+				zapis.println(calculationResult);
+				zapis.close();
+			}
+		} catch (OperationNotSupportedException e) {
+			
+		}
+	}
+
+	private int calculateForArrayNumbers(int iloscLiczb, Scanner odczyt) throws OperationNotSupportedException {
+		int operationTypeIntValue;
+		int[] choosenNumbers;
+		
+		choosenNumbers = new int[iloscLiczb];
+		System.out.println("Podaj liczby");
+		for (int i=0; i<iloscLiczb; i++)
+			choosenNumbers[i]=odczyt.nextInt();
+		
+		System.out.print("Wybierz co chcesz zrobic\n1.dodawanie\n2.odejmowanie\n3.mnozenie\n4.potegowanie\n");
+		operationTypeIntValue = odczyt.nextInt();
+		
+		OperacjaType wybranaOpcja = OperacjaType.fromIntValue(operationTypeIntValue);
+		System.out.println("Wybrano: " + wybranaOpcja);
+		
+		for (KalkulatorStrategy strategia : strategie) {
+			if (strategia.czyPasuje(wybranaOpcja)) {
+				try {
+					return strategia.wynik(choosenNumbers);
+				} catch (UnsupportedOperationException e) {
+					System.out.println("Nieprawidlowa ilosc liczb, wybrano " + iloscLiczb + ", a nalezy podac 2 liczby");
+				}
+			}
+		}
+		
+		throw new OperationNotSupportedException();
+	}
+
+	private int calculateForTwoNumbers(Scanner odczyt) throws OperationNotSupportedException {
+		int firstNumber;
+		int secondNumber;
+		int operationTypeIntValue;
+		
+		System.out.println("Podaj liczby");
+		firstNumber = odczyt.nextInt();
+		secondNumber = odczyt.nextInt();
+		
+		System.out.print("Wybierz co chcesz zrobic\n1.dodawanie\n2.odejmowanie\n3.mnozenie\n4.potegowanie\n");
+		operationTypeIntValue = odczyt.nextInt();
+		
+		OperacjaType wybranaOpcja = OperacjaType.fromIntValue(operationTypeIntValue);
+		System.out.println("Wybrano: " + wybranaOpcja);
+		
+		for (KalkulatorStrategy strategia : strategie) {
+			if (strategia.czyPasuje(wybranaOpcja)) {
+				return strategia.wynik(firstNumber, secondNumber);
+			}
+		}
+		
+		throw new OperationNotSupportedException();
+	}
+
+	private void initStrategies() {
+		strategie = new ArrayList<>();
 		strategie.add(new DodawanieStrategy());
 		strategie.add(new OdejmowanieStrategy());
 		strategie.add(new Mno¿enieStrategy());
 		strategie.add(new PotegowanieStrategy());
-		
-		System.out.println("Podaj ilosc liczb");
-		
-		int ilosc, a, b, w, wynik = 0;
-		String z;
-		int[] tab;
-		
-		Scanner odczyt = new Scanner(System.in);
-		ilosc = odczyt.nextInt();
-		
-		if (ilosc == 2) {
-			System.out.println("Podaj pierwsza liczbe");
-			a = odczyt.nextInt();
-			
-			System.out.println("Podaj druga liczbe");
-			b = odczyt.nextInt();
-			
-			System.out.print("Wybierz co chcesz zrobic\n1.dodawanie\n2.odejmowanie\n3.mnozenie\n4.potegowanie\n");
-			w = odczyt.nextInt();
-			
-			OperacjaType wybranaOpcja = OperacjaType.fromIntValue(w);
-			System.out.println("Wybrano: " + wybranaOpcja);
-			for (KalkulatorStrategy strategia : strategie) {
-				if (strategia.czyPasuje(wybranaOpcja)) {
-					wynik = strategia.wynik(a, b);
-					System.out.println(wynik);;
-				}
-			}
-		}
-		else if (ilosc > 2) {
-			tab = new int[ilosc];
-			System.out.println("Podaj liczby");
-			for (int i=0; i<ilosc; i++)
-				tab[i]=odczyt.nextInt();
-			
-			System.out.print("Wybierz co chcesz zrobic\n1.dodawanie\n2.odejmowanie\n3.mnozenie\n4.potegowanie\n");
-			w = odczyt.nextInt();
-			
-			OperacjaType wybranaOpcja = OperacjaType.fromIntValue(w);
-			System.out.println("Wybrano: " + wybranaOpcja);
-			for (KalkulatorStrategy strategia : strategie) {
-				if (strategia.czyPasuje(wybranaOpcja)) {
-					try {
-						wynik = strategia.wynik(tab);
-						System.out.println(wynik);
-					} catch (UnsupportedOperationException e) {
-						System.out.println("Nieprawidlowa ilosc liczb, sprobuj z dwoma");
-					}
-				}
-			}
-		}
-		else {
-			System.out.println("Nie mozna wykonac zadnej operacji");
-		}
-		
-		System.out.println("Czy chcesz zapisac wynik do pliku? tak/nie");
-		Scanner odczyt2 = new Scanner(System.in);
-		z = odczyt2.nextLine();
-		
-		PrintWriter zapis = new PrintWriter ("ZapisanyWynik.txt");
-		
-		if (z == "tak") {
-			zapis.print(wynik);
-			zapis.close();
-		}
 	}		
 }
